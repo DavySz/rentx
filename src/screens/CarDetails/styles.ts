@@ -19,6 +19,10 @@ export const Header = styled.View`
     margin-left: 24px;
 `;
 
+export const ButtonContainer = styled.TouchableOpacity.attrs({
+    activeOpacity: 0.7,
+})``;
+
 export const CarImages = styled.View`
     margin-top: ${getStatusBarHeight() + 32}px;
 `;
