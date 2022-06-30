@@ -5,11 +5,12 @@ import { Container, Title } from "./styles";
 type Props = {
     type: "primary" | "secondary";
     title: string;
+    onPress: () => void;
 };
 
-export function Button({ type, title }: Props) {
+export function Button({ type, title, onPress }: Props) {
     return (
-        <Container type={type}>
+        <Container type={type} onPress={onPress}>
             <Title>{title}</Title>
         </Container>
     );
