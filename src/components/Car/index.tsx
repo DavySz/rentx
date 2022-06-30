@@ -26,11 +26,12 @@ type CardData = {
 
 type Props = {
     data: CardData;
+    onPress: () => void;
 };
 
-export function Car({ data }: Props) {
+export function Car({ data, onPress }: Props) {
     return (
-        <Container>
+        <Container onPress={onPress}>
             <Details>
                 <Brand>{data.brand}</Brand>
                 <Name>{data.name}</Name>

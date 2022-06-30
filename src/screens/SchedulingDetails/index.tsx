@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useTheme } from "styled-components";
@@ -42,6 +43,10 @@ import {
 
 export function SchedulingDetails() {
     const theme = useTheme();
+    const navigation = useNavigation();
+    function handleConfirmRental() {
+        navigation.navigate("SchedulingComplete");
+    }
     return (
         <Container>
             <Header>
@@ -106,7 +111,11 @@ export function SchedulingDetails() {
                 </RentalPrice>
             </Content>
             <Footer>
-                <Button type="secondary" title="Alugar agora" />
+                <Button
+                    type="secondary"
+                    title="Alugar agora"
+                    onPress={() => handleConfirmRental()}
+                />
             </Footer>
         </Container>
     );

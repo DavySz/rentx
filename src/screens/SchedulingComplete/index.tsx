@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { useWindowDimensions, StatusBar } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
@@ -9,6 +10,10 @@ import { Container, Content, Title, Message, Footer } from "./styles";
 
 export function SchedulingComplete() {
     const { width } = useWindowDimensions();
+    const navigation = useNavigation();
+    function handleConfirmRental() {
+        navigation.navigate("Home");
+    }
     return (
         <Container>
             <StatusBar
@@ -27,7 +32,10 @@ export function SchedulingComplete() {
                 </Message>
             </Content>
             <Footer>
-                <ConfirmButton title="OK" />
+                <ConfirmButton
+                    title="OK"
+                    onPress={() => handleConfirmRental()}
+                />
             </Footer>
         </Container>
     );
