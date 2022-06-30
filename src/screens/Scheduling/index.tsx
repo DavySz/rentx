@@ -23,6 +23,9 @@ export function Scheduling() {
     function handleConfirmRental() {
         navigation.navigate("SchedulingDetails");
     }
+    function handleGoBack() {
+        navigation.goBack();
+    }
     return (
         <Container>
             <Header>
@@ -31,7 +34,7 @@ export function Scheduling() {
                     barStyle="light-content"
                     backgroundColor="transparent"
                 />
-                <BackButton type="secondary" />
+                <BackButton type="secondary" onPress={() => handleGoBack()} />
                 <Title>
                     Escolha uma{"\n"}
                     data de início e{"\n"}

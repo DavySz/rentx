@@ -14,6 +14,7 @@ import { ImageSlider } from "../../components/Car/ImageSlider";
 import {
     Container,
     Header,
+    ButtonContainer,
     CarImages,
     Content,
     Details,
@@ -33,10 +34,13 @@ export function CarDetails() {
     function handleConfirmRental() {
         navigation.navigate("Scheduling");
     }
+    function handleGoBack() {
+        navigation.goBack();
+    }
     return (
         <Container>
             <Header>
-                <BackButton type="primary" />
+                <BackButton type="primary" onPress={() => handleGoBack()} />
             </Header>
             <CarImages>
                 <ImageSlider

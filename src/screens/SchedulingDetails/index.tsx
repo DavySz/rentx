@@ -47,10 +47,13 @@ export function SchedulingDetails() {
     function handleConfirmRental() {
         navigation.navigate("SchedulingComplete");
     }
+    function handleGoBack() {
+        navigation.goBack();
+    }
     return (
         <Container>
             <Header>
-                <BackButton type="primary" />
+                <BackButton type="primary" onPress={() => handleGoBack()} />
             </Header>
             <CarImages>
                 <ImageSlider
