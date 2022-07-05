@@ -1,64 +1,40 @@
 /* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import {
     Calendar as CustomCalendar,
     LocaleConfig,
+    CalendarProps,
 } from "react-native-calendars";
-import { RFValue } from "react-native-responsive-fontsize";
+import { MarkingProps } from "react-native-calendars/src/calendar/day/marking";
 import { useTheme } from "styled-components";
 
-LocaleConfig.locales["pt-br"] = {
-    monthNames: [
-        "Janeiro",
-        "Fevereiro",
-        "Março",
-        "Abril",
-        "Maio",
-        "Junho",
-        "Julho",
-        "Agosto",
-        "Setembro",
-        "Outubro",
-        "Novembro",
-        "Dezembro",
-    ],
-    monthNamesShort: [
-        "Jan",
-        "Fev",
-        "Mar",
-        "Abr",
-        "Mai",
-        "Jun",
-        "Jul",
-        "Ago",
-        "Set",
-        "Out",
-        "Nov",
-        "Dez",
-    ],
-    dayNames: [
-        "Domingo",
-        "Segunda",
-        "Terça",
-        "Quarta",
-        "Quinta",
-        "Sexta",
-        "Sábado",
-    ],
-    dayNamesShort: ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"],
-    today: "Hoje",
-};
+import { generateInterval } from "./generateInterval";
+import { ptBR } from "./localeConfig";
 
+LocaleConfig.locales["pt-br"] = ptBR;
 LocaleConfig.defaultLocale = "pt-br";
 
-export function Calendar() {
+interface MarkedDateProps {
+    [date: string]: MarkingProps;
+}
+
+interface DayProps {
+    dateString: string;
+    day: number;
+    month: number;
+    year: number;
+    timestamp: number;
+}
+
+function Calendar({ markedDates, onDayPress }: CalendarProps) {
     const theme = useTheme();
     return (
         <CustomCalendar
             renderArrow={(direction) => (
                 <Feather
-                    size={RFValue(24)}
+                    size={24}
                     color={theme.colors.text}
                     name={
                         direction === "left" ? "chevron-left" : "chevron-right"
@@ -72,7 +48,6 @@ export function Calendar() {
                 paddingBottom: 10,
                 marginBottom: 10,
             }}
-            ar
             theme={{
                 textDayFontFamily: theme.fonts.primary_400,
                 textDayHeaderFontFamily: theme.fonts.primary_500,
@@ -86,6 +61,11 @@ export function Calendar() {
             }}
             firstDay={1}
             minDate={String(new Date())}
+            markingType="period"
+            markedDates={markedDates}
+            onDayPress={onDayPress}
         />
     );
 }
+
+export { MarkedDateProps, DayProps, Calendar, generateInterval };

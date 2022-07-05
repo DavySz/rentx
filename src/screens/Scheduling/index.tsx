@@ -1,11 +1,16 @@
-import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { StatusBar } from "react-native";
+/* eslint-disable react/jsx-no-bind */
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { format } from "date-fns";
+import React, { useState } from "react";
+import { Alert, StatusBar } from "react-native";
 
 import ArrowSvg from "../../assets/arrow.svg";
 import { BackButton } from "../../components/BackButton";
 import { Button } from "../../components/Button";
-import { Calendar } from "../../components/Calendar";
+import { Calendar, DayProps, MarkedDateProps } from "../../components/Calendar";
+import { generateInterval } from "../../components/Calendar/generateInterval";
+import { CarDTO } from "../../dtos/CarDTO";
+import { getPlatformDate } from "../../utils/getPlatformDate";
 import {
     Container,
     Header,
@@ -18,13 +23,68 @@ import {
     Footer,
 } from "./styles";
 
+type RentalPeriod = {
+    startFormatted: string;
+    endFormatted: string;
+};
+
+type Params = {
+    car: CarDTO;
+};
+
 export function Scheduling() {
     const navigation = useNavigation();
+    const route = useRoute();
+    const { car } = route.params as Params;
+    const [lastSelectedDate, setLastSelectedDate] = useState<DayProps>(
+        {} as DayProps
+    );
+    const [markedDates, setMarkedDates] = useState<MarkedDateProps>(
+        {} as MarkedDateProps
+    );
+    const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>(
+        {} as RentalPeriod
+    );
     function handleConfirmRental() {
-        navigation.navigate("SchedulingDetails");
+        if (!rentalPeriod.startFormatted || !rentalPeriod.endFormatted) {
+            Alert.alert("Selecione o intervalo para alugar");
+        } else {
+            console.log(Object.keys(markedDates));
+            navigation.navigate("SchedulingDetails", {
+                car,
+                dates: Object.keys(markedDates),
+            });
+        }
     }
     function handleGoBack() {
         navigation.goBack();
+    }
+    function handleChangeDate(date: DayProps) {
+        let start = !lastSelectedDate.timestamp ? date : lastSelectedDate;
+        let end = date;
+
+        if (start.timestamp > end.timestamp) {
+            start = end;
+            end = start;
+        }
+
+        setLastSelectedDate(end);
+        const interval = generateInterval(start, end);
+        setMarkedDates(interval);
+
+        const startDate = Object.keys(interval)[0];
+        const endDate = Object.keys(interval)[Object.keys(interval).length - 1];
+
+        setRentalPeriod({
+            startFormatted: format(
+                getPlatformDate(new Date(startDate)),
+                "dd/MM/yyyy"
+            ),
+            endFormatted: format(
+                getPlatformDate(new Date(endDate)),
+                "dd/MM/yyyy"
+            ),
+        });
     }
     return (
         <Container>
@@ -43,17 +103,24 @@ export function Scheduling() {
                 <RentalPeriod>
                     <DateInfo>
                         <DateTitle>DE</DateTitle>
-                        <DateValue selected={false}>18/06/2021</DateValue>
+                        <DateValue selected={!!rentalPeriod.startFormatted}>
+                            {rentalPeriod.startFormatted}
+                        </DateValue>
                     </DateInfo>
                     <ArrowSvg />
                     <DateInfo>
                         <DateTitle>ATÉ</DateTitle>
-                        <DateValue selected={false}>18/06/2021</DateValue>
+                        <DateValue selected={!!rentalPeriod.endFormatted}>
+                            {rentalPeriod.endFormatted}
+                        </DateValue>
                     </DateInfo>
                 </RentalPeriod>
             </Header>
             <Content>
-                <Calendar />
+                <Calendar
+                    markedDates={markedDates}
+                    onDayPress={handleChangeDate}
+                />
             </Content>
             <Footer>
                 <Button
