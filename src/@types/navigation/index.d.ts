@@ -16,6 +16,7 @@ export declare global {
                 car: CarDTO;
             };
             SchedulingComplete: undefined;
+            MyCars: undefined;
         }
     }
 }

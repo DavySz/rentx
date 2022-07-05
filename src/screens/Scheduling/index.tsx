@@ -49,7 +49,6 @@ export function Scheduling() {
         if (!rentalPeriod.startFormatted || !rentalPeriod.endFormatted) {
             Alert.alert("Selecione o intervalo para alugar");
         } else {
-            console.log(Object.keys(markedDates));
             navigation.navigate("SchedulingDetails", {
                 car,
                 dates: Object.keys(markedDates),

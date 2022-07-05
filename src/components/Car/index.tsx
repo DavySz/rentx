@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React from "react";
 
 import { CarDTO } from "../../dtos/CarDTO";
@@ -17,7 +18,7 @@ import {
 
 type Props = {
     data: CarDTO;
-    onPress: () => void;
+    onPress?: () => void;
 };
 
 export function Car({ data, onPress }: Props) {
