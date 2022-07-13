@@ -10,7 +10,7 @@ import { useTheme } from "styled-components";
 import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
 import { Button } from "../../components/Button";
-import { ImageSlider } from "../../components/Car/ImageSlider";
+import { ImageSlider } from "../../components/ImageSlider";
 import { CarDTO } from "../../dtos/CarDTO";
 import api from "../../services/api";
 import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
