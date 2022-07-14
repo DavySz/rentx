@@ -3,7 +3,6 @@ import Animated, {
     useSharedValue,
     useAnimatedStyle,
     withTiming,
-    Easing,
     interpolate,
     Extrapolate,
 } from "react-native-reanimated";
