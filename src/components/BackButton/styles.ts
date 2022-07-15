@@ -9,9 +9,7 @@ type IconProps = {
     type: "primary" | "secondary";
 };
 
-export const Container = styled(TouchableOpacity).attrs({
-    activeOpacity: 0.7,
-})``;
+export const Container = styled(TouchableOpacity)``;
 
 export const Icon = styled(
     MaterialIcons as unknown as AnyStyledComponent
