@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-extraneous-dependencies */
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { StatusBar, StyleSheet, TouchableOpacity } from "react-native";
+import {
+    StatusBar,
+    StyleSheet,
+    TouchableOpacity,
+    BackHandler,
+} from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
     useSharedValue,
@@ -72,6 +77,14 @@ export function Home() {
         fetchCars();
     }, []);
 
+    useFocusEffect(() => {
+        const backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            () => true
+        );
+        return () => backHandler.remove();
+    });
+
     function handleCarDetails(car: CarDTO) {
         navigation.navigate("CarDetails", { car });
     }
@@ -90,7 +103,9 @@ export function Home() {
             <Header>
                 <HeaderContent>
                     <Logo width={RFValue(108)} height={RFValue(12)} />
-                    <TotalCars>Total de {cars.length} carros</TotalCars>
+                    {!isLoading && (
+                        <TotalCars>Total de {cars.length} carros</TotalCars>
+                    )}
                 </HeaderContent>
             </Header>
             {isLoading ? (
