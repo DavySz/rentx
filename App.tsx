@@ -10,6 +10,7 @@ import {
 } from "@expo-google-fonts/inter";
 import * as SplashScreen from "expo-splash-screen";
 import React from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemeProvider } from "styled-components";
 
 import { Routes } from "./src/routes";
@@ -33,7 +34,9 @@ export default function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Routes />
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <Routes />
+            </GestureHandlerRootView>
         </ThemeProvider>
     );
 }

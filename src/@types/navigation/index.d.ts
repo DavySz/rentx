@@ -4,6 +4,7 @@ import { CarDTO } from "../../dtos/CarDTO";
 export declare global {
     namespace ReactNavigation {
         interface RootParamList {
+            Splash: undefined;
             Home: undefined;
             CarDetails: {
                 car: CarDTO;
