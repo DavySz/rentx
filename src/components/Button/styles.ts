@@ -1,34 +1,30 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { TouchableOpacity } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import styled, { css } from "styled-components/native";
+import styled from "styled-components/native";
 
-type ButtonProps = {
-    type: "primary" | "secondary";
+type ButtonContainerProps = {
+    color: string;
+};
+
+type ButtonTextProps = {
+    light: boolean;
 };
 
 export const Container = styled(TouchableOpacity).attrs({
     activeOpacity: 0.7,
-})<ButtonProps>`
+})<ButtonContainerProps>`
     width: 100%;
     padding: 19px;
     align-items: center;
     justify-content: center;
 
-    ${({ type }) =>
-        type === "primary" &&
-        css`
-            background-color: ${({ theme }) => theme.colors.main};
-        `}
-    ${({ type }) =>
-        type === "secondary" &&
-        css`
-            background-color: ${({ theme }) => theme.colors.success};
-        `}
+    background-color: ${({ color }) => color};
 `;
 
-export const Title = styled.Text`
+export const Title = styled.Text<ButtonTextProps>`
     font-family: ${({ theme }) => theme.fonts.primary_500};
     font-size: ${RFValue(15)}px;
-    color: ${({ theme }) => theme.colors.shape};
+    color: ${({ theme, light }) =>
+        light ? theme.colors.header : theme.colors.shape};
 `;
