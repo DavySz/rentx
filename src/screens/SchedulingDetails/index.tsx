@@ -176,7 +176,7 @@ export function SchedulingDetails() {
             </Content>
             <Footer>
                 <Button
-                    type="secondary"
+                    color={theme.colors.success}
                     title="Alugar agora"
                     onPress={() => handleConfirmRental()}
                     disabled={loading}
