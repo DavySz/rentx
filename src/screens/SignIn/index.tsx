@@ -43,7 +43,15 @@ export function SignIn() {
     }
 
     return (
-        <KeyboardAvoidingView behavior="position" enabled>
+        <KeyboardAvoidingView
+            behavior="position"
+            enabled
+            style={{
+                backgroundColor: theme.colors.background_primary,
+                paddingHorizontal: 24,
+                flex: 1,
+            }}
+        >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <Container>
                     <StatusBar
@@ -79,14 +87,12 @@ export function SignIn() {
                         <Button
                             title="Login"
                             onPress={() => handleSignIn()}
-                            disabled
                             loading={false}
                         />
                         <Button
                             color={theme.colors.background_secondary}
                             title="Criar conta gratuita"
                             onPress={() => {}}
-                            disabled
                             loading={false}
                             light
                         />
