@@ -14,6 +14,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemeProvider } from "styled-components";
 
 import { Routes } from "./src/routes";
+import { SignIn } from "./src/screens/SignIn";
 import theme from "./src/styles/theme";
 
 export default function App() {
@@ -35,7 +36,7 @@ export default function App() {
     return (
         <ThemeProvider theme={theme}>
             <GestureHandlerRootView style={{ flex: 1 }}>
-                <Routes />
+                <SignIn />
             </GestureHandlerRootView>
         </ThemeProvider>
     );
