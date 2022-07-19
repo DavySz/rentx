@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React from "react";
+import React, { useState } from "react";
 import {
     StatusBar,
     KeyboardAvoidingView,
@@ -15,6 +15,8 @@ import { Container, Header, Title, Subtitle, Form, Footer } from "./styles";
 
 export function SignIn() {
     const theme = useTheme();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     return (
         <KeyboardAvoidingView behavior="position" enabled>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -38,8 +40,15 @@ export function SignIn() {
                             placeholder="E-mail"
                             autoCapitalize="none"
                             keyboardType="email-address"
+                            onChangeText={setEmail}
+                            value={email}
                         />
-                        <InputPassword iconName="lock" placeholder="Senha" />
+                        <InputPassword
+                            iconName="lock"
+                            placeholder="Senha"
+                            onChangeText={setPassword}
+                            value={password}
+                        />
                     </Form>
                     <Footer>
                         <Button
