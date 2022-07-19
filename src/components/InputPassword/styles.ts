@@ -2,12 +2,22 @@ import { TextInput } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
 import styled, { css } from "styled-components/native";
 
-interface IContainerProps {
+interface IProps {
     isFocused: boolean;
 }
 
-export const Container = styled.View<IContainerProps>`
+export const Container = styled.View`
     flex-direction: row;
+`;
+
+export const IconContainer = styled.View<IProps>`
+    height: 56px;
+    width: 55px;
+    justify-content: center;
+    align-items: center;
+    background-color: ${({ theme }) => theme.colors.background_secondary};
+
+    margin-right: 2px;
 
     ${({ theme, isFocused }) =>
         isFocused &&
@@ -17,17 +27,7 @@ export const Container = styled.View<IContainerProps>`
         `}
 `;
 
-export const IconContainer = styled.View`
-    height: 56px;
-    width: 55px;
-    justify-content: center;
-    align-items: center;
-    background-color: ${({ theme }) => theme.colors.background_secondary};
-
-    margin-right: 2px;
-`;
-
-export const InputText = styled(TextInput)`
+export const InputText = styled(TextInput)<IProps>`
     flex: 1;
     background-color: ${({ theme }) => theme.colors.background_secondary};
     color: ${({ theme }) => theme.colors.text};
@@ -35,6 +35,13 @@ export const InputText = styled(TextInput)`
     font-size: ${RFValue(15)}px;
 
     padding: 0 23px;
+
+    ${({ theme, isFocused }) =>
+        isFocused &&
+        css`
+            border-bottom-width: 2px;
+            border-bottom-color: ${theme.colors.main};
+        `}
 `;
 
 export const ChangePasswordVisibilityButton = styled.TouchableOpacity.attrs({
