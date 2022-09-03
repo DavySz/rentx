@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
@@ -12,6 +13,7 @@ import { BackButton } from "../../../components/BackButton";
 import { Bullet } from "../../../components/Bullet";
 import { Button } from "../../../components/Button";
 import { InputPassword } from "../../../components/InputPassword";
+import api from "../../../services/api";
 import {
     Container,
     Form,
@@ -39,18 +41,29 @@ export function SignUpSecondStep() {
         navigation.navigate("SignIn");
     }
 
-    function handleRegister() {
+    async function handleRegister() {
         if (!password || !passwordConfirm) {
             return Alert.alert("Informe a senha, e a confirmação.");
         }
         if (password !== passwordConfirm) {
             return Alert.alert("As senhas não são iguais.");
         }
-        return navigation.navigate("Confirmation", {
-            onPress: () => handleNextScreen(),
-            message: "Conta criada!",
-            title: `Agora é só fazer login\ne aproveitar`,
-        });
+
+        await api
+            .post("/users", {
+                password,
+                name: user.name,
+                email: user.email,
+                driver_license: user.driverLicense,
+            })
+            .then(() => {
+                navigation.navigate("Confirmation", {
+                    onPress: () => handleNextScreen(),
+                    message: "Conta criada!",
+                    title: `Agora é só fazer login\ne aproveitar`,
+                });
+            })
+            .catch(() => Alert.alert("Opa", "Não foi possível cadastrar"));
     }
 
     return (
