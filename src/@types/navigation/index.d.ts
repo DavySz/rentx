@@ -3,7 +3,7 @@ import { CarDTO } from "../../dtos/CarDTO";
 /* eslint-disable @typescript-eslint/naming-convention */
 export declare global {
     namespace ReactNavigation {
-        interface RootParamList {
+        export interface RootParamList {
             Splash: undefined;
             Home: undefined;
             CarDetails: {
@@ -16,8 +16,21 @@ export declare global {
                 dates: string[];
                 car: CarDTO;
             };
-            SchedulingComplete: undefined;
+            SignIn: undefined;
+            Confirmation: {
+                title: string;
+                message: string;
+                onPress: () => void;
+            };
             MyCars: undefined;
+            SignUpFirstStep: undefined;
+            SignUpSecondStep: {
+                user: {
+                    name: string;
+                    email: string;
+                    driverLicense: string;
+                };
+            };
         }
     }
 }
