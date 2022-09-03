@@ -10,6 +10,3 @@
 </p>
 
 
-<h1 align="center">
-  <img alt="capa" title="rentx" src=".github/Capa.png" />
-</h1>
