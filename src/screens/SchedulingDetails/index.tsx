@@ -64,6 +64,10 @@ export function SchedulingDetails() {
 
     const rentTotal = Number(dates.length * car.rent.price);
 
+    function handleNextScreen() {
+        navigation.navigate("Home");
+    }
+
     async function handleConfirmRental() {
         setLoading(true);
 
@@ -92,7 +96,15 @@ export function SchedulingDetails() {
                 id: car.id,
                 unavailable_dates,
             })
-            .then(() => navigation.navigate("SchedulingComplete"))
+            .then(() =>
+                navigation.navigate("Confirmation", {
+                    message: ` Agora você só precisa ir\n
+                até a concessionária da RENTX\n
+                pegar o seu automóvel.`,
+                    title: "Carro Alugado!",
+                    onPress: () => handleNextScreen(),
+                })
+            )
             .catch(() => {
                 setLoading(false);
                 Alert.alert("Não foi possível confirmar o agendamento");
@@ -176,7 +188,7 @@ export function SchedulingDetails() {
             </Content>
             <Footer>
                 <Button
-                    type="secondary"
+                    color={theme.colors.success}
                     title="Alugar agora"
                     onPress={() => handleConfirmRental()}
                     disabled={loading}

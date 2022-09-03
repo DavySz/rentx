@@ -7,24 +7,26 @@ import { useTheme } from "styled-components";
 import { Container, Title } from "./styles";
 
 type Props = {
-    type: "primary" | "secondary";
+    color?: string;
     title: string;
     onPress: () => void;
     disabled?: boolean;
     loading?: boolean;
+    light?: boolean;
 };
 
 export function Button({
-    type,
+    color,
     title,
     onPress,
     disabled = false,
     loading = false,
+    light,
 }: Props) {
     const theme = useTheme();
     return (
         <Container
-            type={type}
+            color={color || theme.colors.main}
             onPress={onPress}
             disabled={disabled}
             style={{ opacity: disabled === true || loading === true ? 0.5 : 1 }}
@@ -32,7 +34,7 @@ export function Button({
             {loading ? (
                 <ActivityIndicator color={theme.colors.shape} />
             ) : (
-                <Title>{title}</Title>
+                <Title light={light}>{title}</Title>
             )}
         </Container>
     );
