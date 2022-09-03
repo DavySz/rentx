@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
     StatusBar,
@@ -19,6 +20,7 @@ export function SignIn() {
     const theme = useTheme();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigation = useNavigation();
 
     async function handleSignIn() {
         try {
@@ -40,6 +42,10 @@ export function SignIn() {
                 );
             }
         }
+    }
+
+    function handleNewAccount() {
+        navigation.navigate("SignUpFirstStep");
     }
 
     return (
@@ -92,7 +98,7 @@ export function SignIn() {
                         <Button
                             color={theme.colors.background_secondary}
                             title="Criar conta gratuita"
-                            onPress={() => {}}
+                            onPress={() => handleNewAccount()}
                             loading={false}
                             light
                         />
