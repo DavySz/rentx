@@ -1,5 +1,8 @@
 {
-  "compilerOptions": {},
+  "compilerOptions": {
+    "strict": true,
+    "experimentalDecorators": true
+  },
   "extends": "expo/tsconfig.base",
   "typeRoots": ["/src/@types"]
 }
