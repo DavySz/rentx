@@ -1,22 +1,14 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useRef, useState } from "react";
-import { FlatList, ViewToken } from "react-native";
+import { FlatList } from "react-native";
 
 import { Bullet } from "../Bullet";
 import { Container, ImageIndexs, CarImageWrapper, CarImage } from "./styles";
+import { IImageSlider, TChangeImage } from "./types";
 
-type Props = {
-    imagesUrl: string[];
-};
-
-type ChangeImageProps = {
-    viewableItems: ViewToken[];
-    changed: ViewToken[];
-};
-
-export function ImageSlider({ imagesUrl }: Props) {
+export function ImageSlider({ imagesUrl }: IImageSlider) {
     const [imageIndex, setImageIndex] = useState(0);
-    const indexChanged = useRef((info: ChangeImageProps) => {
+    const indexChanged = useRef((info: TChangeImage) => {
         const { index } = info.viewableItems[0];
         setImageIndex(index);
     });
@@ -24,19 +16,19 @@ export function ImageSlider({ imagesUrl }: Props) {
     return (
         <Container>
             <ImageIndexs>
-                {imagesUrl.map((_, index) => (
-                    <Bullet
-                        active={index === imageIndex}
-                        key={index.toString()}
-                    />
+                {imagesUrl.map((item, index) => (
+                    <Bullet key={item.id} active={index === imageIndex} />
                 ))}
             </ImageIndexs>
             <FlatList
                 data={imagesUrl}
-                keyExtractor={(key) => key}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <CarImageWrapper>
-                        <CarImage source={{ uri: item }} resizeMode="contain" />
+                        <CarImage
+                            source={{ uri: item.photo }}
+                            resizeMode="contain"
+                        />
                     </CarImageWrapper>
                 )}
                 horizontal
