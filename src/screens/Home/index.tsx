@@ -1,14 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-extraneous-dependencies */
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import {
-    StatusBar,
-    StyleSheet,
-    TouchableOpacity,
-    BackHandler,
-} from "react-native";
+import { StatusBar, StyleSheet, TouchableOpacity } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Animated, {
     useSharedValue,
@@ -76,14 +71,6 @@ export function Home() {
     useEffect(() => {
         fetchCars();
     }, []);
-
-    useFocusEffect(() => {
-        const backHandler = BackHandler.addEventListener(
-            "hardwareBackPress",
-            () => true
-        );
-        return () => backHandler.remove();
-    });
 
     function handleCarDetails(car: CarDTO) {
         navigation.navigate("CarDetails", { car });
