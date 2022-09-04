@@ -31,6 +31,7 @@ export declare global {
                     driverLicense: string;
                 };
             };
+            Profile: undefined;
         }
     }
 }
