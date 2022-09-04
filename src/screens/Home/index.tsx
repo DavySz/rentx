@@ -57,19 +57,28 @@ export function Home() {
 
     const theme = useTheme();
 
-    async function fetchCars() {
-        try {
-            const response = await api.get("/cars");
-            setCars(response.data);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
     useEffect(() => {
+        let isMounted = true;
+
+        async function fetchCars() {
+            try {
+                const response = await api.get("/cars");
+                if (isMounted) {
+                    setCars(response.data);
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        }
         fetchCars();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     function handleCarDetails(car: CarDTO) {
