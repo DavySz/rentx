@@ -22,7 +22,7 @@ type Props = {
 };
 
 export function Car({ data, onPress }: Props) {
-    const MotoorIcon = getAccessoryIcon(data.fuel_type);
+    const MotorIcon = getAccessoryIcon(data.fuel_type);
     return (
         <Container onPress={onPress}>
             <Details>
@@ -30,11 +30,11 @@ export function Car({ data, onPress }: Props) {
                 <Name>{data.name}</Name>
                 <About>
                     <Rent>
-                        <Period>{data.rent.period}</Period>
-                        <Price>{`R$ ${data.rent.price}`}</Price>
+                        <Period>{data.period}</Period>
+                        <Price>{`R$ ${data.price}`}</Price>
                     </Rent>
                     <Type>
-                        <MotoorIcon />
+                        <MotorIcon />
                     </Type>
                 </About>
             </Details>
