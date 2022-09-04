@@ -19,5 +19,7 @@ export interface IAuthProvider {
 
 export interface IAuthContextData {
     user: IUser;
+    signOut: () => Promise<void>;
     signIn: (credentials: ISignInCredentials) => Promise<void>;
+    updateUser: (user: IUser) => Promise<void>;
 }
