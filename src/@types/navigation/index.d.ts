@@ -1,4 +1,4 @@
-import { CarDTO } from "../../dtos/CarDTO";
+import { Car as CarModel } from "../../database/model/Car";
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export declare global {
@@ -7,10 +7,10 @@ export declare global {
             Splash: undefined;
             Home: undefined;
             CarDetails: {
-                car: CarDTO;
+                car: CarModel;
             };
             Scheduling: {
-                car: CarDTO;
+                car: Car;
             };
             SchedulingDetails: {
                 dates: string[];
