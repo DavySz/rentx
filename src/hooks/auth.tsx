@@ -17,6 +17,7 @@ const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
 
 function AuthProvider({ children }: IAuthProvider) {
     const [data, setData] = useState<IUser>({} as IUser);
+    const [loading, setLoading] = useState(true);
 
     async function signIn({ email, password }: ISignInCredentials) {
         const response = await api.post("/sessions", {
@@ -71,6 +72,7 @@ function AuthProvider({ children }: IAuthProvider) {
             const userData = response[0]._raw as unknown as IUser;
             api.defaults.headers.common.Authorization = `Bearer ${userData.token}`;
             setData(userData);
+            setLoading(false);
         }
     }
 
@@ -85,6 +87,7 @@ function AuthProvider({ children }: IAuthProvider) {
                 signIn,
                 signOut,
                 updateUser,
+                loading,
             }}
         >
             {children}
