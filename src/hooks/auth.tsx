@@ -17,8 +17,9 @@ const AuthContext = createContext<IAuthContextData>({} as IAuthContextData);
 
 function AuthProvider({ children }: IAuthProvider) {
     const [data, setData] = useState<IUser>({} as IUser);
+    const [loading, setLoading] = useState(true);
 
-    async function SignIn({ email, password }: ISignInCredentials) {
+    async function signIn({ email, password }: ISignInCredentials) {
         const response = await api.post("/sessions", {
             email,
             password,
@@ -41,6 +42,28 @@ function AuthProvider({ children }: IAuthProvider) {
         setData({ ...user, token });
     }
 
+    async function signOut() {
+        const userCollection = database.get<UserModel>("users");
+        await database.write(async () => {
+            await (await userCollection.find(data.id)).destroyPermanently();
+        });
+        setData({} as IUser);
+    }
+
+    async function updateUser(user: IUser) {
+        const userCollection = database.get<UserModel>("users");
+        await database.write(async () => {
+            await (
+                await userCollection.find(user.id)
+            ).update((userData) => {
+                userData.name = user.name;
+                userData.driver_license = user.driver_license;
+                userData.avatar = user.avatar;
+            });
+        });
+        setData(user);
+    }
+
     async function loadUserData() {
         const userCollection = database.get<UserModel>("users");
         const response = await userCollection.query().fetch();
@@ -49,6 +72,7 @@ function AuthProvider({ children }: IAuthProvider) {
             const userData = response[0]._raw as unknown as IUser;
             api.defaults.headers.common.Authorization = `Bearer ${userData.token}`;
             setData(userData);
+            setLoading(false);
         }
     }
 
@@ -57,7 +81,15 @@ function AuthProvider({ children }: IAuthProvider) {
     });
 
     return (
-        <AuthContext.Provider value={{ user: data, signIn: SignIn }}>
+        <AuthContext.Provider
+            value={{
+                user: data,
+                signIn,
+                signOut,
+                updateUser,
+                loading,
+            }}
+        >
             {children}
         </AuthContext.Provider>
     );

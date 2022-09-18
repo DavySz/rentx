@@ -1,7 +1,8 @@
 /* eslint-disable react/require-default-props */
+import { useNetInfo } from "@react-native-community/netinfo";
 import React from "react";
 
-import { CarDTO } from "../../dtos/CarDTO";
+import { Car as CarModel } from "../../database/model/Car";
 import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 import {
     Container,
@@ -17,11 +18,12 @@ import {
 } from "./styles";
 
 type Props = {
-    data: CarDTO;
+    data: CarModel;
     onPress?: () => void;
 };
 
 export function Car({ data, onPress }: Props) {
+    const netInfo = useNetInfo();
     const MotorIcon = getAccessoryIcon(data.fuel_type);
     return (
         <Container onPress={onPress}>
@@ -31,7 +33,11 @@ export function Car({ data, onPress }: Props) {
                 <About>
                     <Rent>
                         <Period>{data.period}</Period>
-                        <Price>{`R$ ${data.price}`}</Price>
+                        <Price>
+                            {netInfo.isConnected === true
+                                ? `R$ ${data.price}`
+                                : "---"}
+                        </Price>
                     </Rent>
                     <Type>
                         <MotorIcon />
