@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable import/no-extraneous-dependencies */
 import { Ionicons } from "@expo/vector-icons";
+import { synchronize } from "@nozbe/watermelondb/sync";
+import { useNetInfo } from "@react-native-community/netinfo";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { StatusBar, StyleSheet, TouchableOpacity } from "react-native";
@@ -17,15 +19,18 @@ import { useTheme } from "styled-components/native";
 import Logo from "../../assets/logo.svg";
 import { Car } from "../../components/Car";
 import { Loading } from "../../components/Loading";
-import { CarDTO } from "../../dtos/CarDTO";
+import { database } from "../../database";
+import { Car as CarModel } from "../../database/model/Car";
 import api from "../../services/api";
 import { Container, Header, TotalCars, HeaderContent, CarList } from "./styles";
 
 const ButtonAnimated = Animated.createAnimatedComponent(TouchableOpacity);
 
 export function Home() {
+    const theme = useTheme();
+    const netInfo = useNetInfo();
     const [isLoading, setIsLoading] = useState(true);
-    const [cars, setCars] = useState<CarDTO[]>([]);
+    const [cars, setCars] = useState<CarModel[]>([]);
     const navigation = useNavigation();
 
     const positionY = useSharedValue(0);
@@ -55,16 +60,41 @@ export function Home() {
         },
     });
 
-    const theme = useTheme();
+    async function offlineSynchronize() {
+        await synchronize({
+            database,
+            pullChanges: async ({ lastPulledAt }) => {
+                const { data } = await api.get(
+                    `/cars/sync/pull?lastPulledVersion=${lastPulledAt || 0}`
+                );
+                const { changes, latestVersion } = data;
+                return { changes, timestamp: latestVersion };
+            },
+            pushChanges: async ({ changes }) => {
+                const user = changes.users;
+                await api.post("/users/sync", user);
+            },
+        });
+    }
+
+    function handleCarDetails(car: CarModel) {
+        navigation.navigate("CarDetails", { car });
+    }
+
+    function handleOpenMyCars() {
+        navigation.navigate("MyCars");
+    }
 
     useEffect(() => {
         let isMounted = true;
 
         async function fetchCars() {
             try {
-                const response = await api.get("/cars");
+                const carCollection = await database.get<CarModel>("cars");
+                const cars = await carCollection.query().fetch();
+
                 if (isMounted) {
-                    setCars(response.data);
+                    setCars(cars);
                 }
             } catch (error) {
                 console.log(error);
@@ -81,13 +111,11 @@ export function Home() {
         };
     }, []);
 
-    function handleCarDetails(car: CarDTO) {
-        navigation.navigate("CarDetails", { car });
-    }
-
-    function handleOpenMyCars() {
-        navigation.navigate("MyCars");
-    }
+    useEffect(() => {
+        if (netInfo.isConnected === true) {
+            offlineSynchronize();
+        }
+    }, [netInfo.isConnected]);
 
     return (
         <Container>
