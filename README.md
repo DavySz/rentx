@@ -39,6 +39,13 @@ $ yarn
 $ yarn start
 ```
 
+
+## 🚀 Backend .env
+- [rentx-backend](https://github.com/DavySz/rentx-backend)
+
+```bash
+API_URL=
+```
 </br>
 
 ---
