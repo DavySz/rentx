@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Feather } from "@expo/vector-icons";
+import { useNetInfo } from "@react-native-community/netinfo";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { format } from "date-fns/esm";
 import React, { useEffect, useState } from "react";
@@ -56,13 +57,15 @@ export function SchedulingDetails() {
         {} as RentalPeriod
     );
     const [loading, setLoading] = useState(false);
+    const [carUpdated, setCarUpdated] = useState<CarDTO>({} as CarDTO);
 
     const theme = useTheme();
     const route = useRoute();
+    const netInfo = useNetInfo();
     const navigation = useNavigation();
     const { car, dates } = route.params as Params;
 
-    const rentTotal = Number(dates.length * car.rent.price);
+    const rentTotal = Number(dates.length * car.price);
 
     function handleNextScreen() {
         navigation.navigate("Home");
@@ -71,34 +74,17 @@ export function SchedulingDetails() {
     async function handleConfirmRental() {
         setLoading(true);
 
-        const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
-
-        const unavailable_dates = [
-            ...schedulesByCar.data.unavailable_dates,
-            ...dates,
-        ];
-
-        await api.post("/schedules_byuser", {
-            user_id: 2,
-            car,
-            startDate: format(
-                getPlatformDate(new Date(dates[0])),
-                "dd/MM/yyyy"
-            ),
-            endDate: format(
-                getPlatformDate(new Date(dates[dates.length - 1])),
-                "dd/MM/yyyy"
-            ),
-        });
-
         await api
-            .put(`/schedules_bycars/${car.id}`, {
-                id: car.id,
-                unavailable_dates,
+            .post("/rentals", {
+                user_id: 1,
+                car_id: car.id,
+                start_date: new Date(dates[0]),
+                end_date: new Date(dates[dates.length - 1]),
+                total: rentTotal,
             })
             .then(() =>
                 navigation.navigate("Confirmation", {
-                    message: ` Agora você só precisa ir\n
+                    message: `Agora você só precisa ir\n
                 até a concessionária da RENTX\n
                 pegar o seu automóvel.`,
                     title: "Carro Alugado!",
@@ -110,8 +96,14 @@ export function SchedulingDetails() {
                 Alert.alert("Não foi possível confirmar o agendamento");
             });
     }
+
     function handleGoBack() {
         navigation.goBack();
+    }
+
+    async function fetchCarUpdated() {
+        const response = await api.get(`/cars/${car.id}`);
+        setCarUpdated(response.data);
     }
 
     useEffect(() => {
@@ -124,13 +116,30 @@ export function SchedulingDetails() {
         });
     }, []);
 
+    useEffect(() => {
+        if (netInfo.isConnected === true) {
+            fetchCarUpdated();
+        }
+    }, [netInfo.isConnected]);
+
     return (
         <Container>
             <Header>
                 <BackButton type="primary" onPress={() => handleGoBack()} />
             </Header>
             <CarImages>
-                <ImageSlider imagesUrl={car.photos} />
+                <ImageSlider
+                    imagesUrl={
+                        carUpdated.photos
+                            ? carUpdated.photos
+                            : [
+                                  {
+                                      id: car.thumbnail,
+                                      photo: car.thumbnail,
+                                  },
+                              ]
+                    }
+                />
             </CarImages>
 
             <Content>
@@ -140,19 +149,21 @@ export function SchedulingDetails() {
                         <Name>{car.name}</Name>
                     </Description>
                     <Rent>
-                        <Period>{car.rent.period}</Period>
-                        <Price>R$ {car.rent.price}</Price>
+                        <Period>{car.period}</Period>
+                        <Price>R$ {car.price}</Price>
                     </Rent>
                 </Details>
-                <Accessories>
-                    {car.accessories.map((accessory) => (
-                        <Accessory
-                            key={accessory.type}
-                            name={accessory.name}
-                            icon={getAccessoryIcon(accessory.type)}
-                        />
-                    ))}
-                </Accessories>
+                {carUpdated.accessories && (
+                    <Accessories>
+                        {carUpdated.accessories.map((accessory) => (
+                            <Accessory
+                                key={accessory.type}
+                                name={accessory.name}
+                                icon={getAccessoryIcon(accessory.type)}
+                            />
+                        ))}
+                    </Accessories>
+                )}
                 <RentalPeriod>
                     <CalendarIcon>
                         <Feather
@@ -180,7 +191,7 @@ export function SchedulingDetails() {
                     <RentalPriceLabel>TOTAL</RentalPriceLabel>
                     <RentalPriceDetails>
                         <RentalPriceQuota>
-                            R$ {car.rent.price} x{dates.length} diárias
+                            R$ {car.price} x{dates.length} diárias
                         </RentalPriceQuota>
                         <RentalPriceTotal>R$ {rentTotal}</RentalPriceTotal>
                     </RentalPriceDetails>
