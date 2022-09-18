@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { Feather } from "@expo/vector-icons";
+import { useNetInfo } from "@react-native-community/netinfo";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
@@ -33,6 +34,7 @@ import { TOptions } from "./types";
 
 export function Profile() {
     const theme = useTheme();
+    const netInfo = useNetInfo();
     const { user, signOut, updateUser } = useAuth();
     const navigation = useNavigation();
 
@@ -45,7 +47,14 @@ export function Profile() {
         navigation.goBack();
     }
     function handleChangeOption(optionSelected: TOptions) {
-        setOption(optionSelected);
+        if (netInfo.isConnected === false && optionSelected === "password") {
+            Alert.alert(
+                "Você está Offline",
+                "Para mudar a senha conecte-se a internet"
+            );
+        } else {
+            setOption(optionSelected);
+        }
     }
     async function handleSelectAvatar() {
         const result = await ImagePicker.launchImageLibraryAsync({
