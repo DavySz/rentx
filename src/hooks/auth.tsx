@@ -72,8 +72,8 @@ function AuthProvider({ children }: IAuthProvider) {
             const userData = response[0]._raw as unknown as IUser;
             api.defaults.headers.common.Authorization = `Bearer ${userData.token}`;
             setData(userData);
-            setLoading(false);
         }
+        setLoading(false);
     }
 
     useEffect(() => {
