@@ -37,7 +37,7 @@ O RentX é umn app para fazer agendamentos de carros com uma interface otimista 
 $ yarn
 
 # Start the project
-$ yarn start
+$ npx react-native run-android
 ```
 
 
