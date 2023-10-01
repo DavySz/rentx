@@ -2,6 +2,10 @@
     "name": "rentx",
     "version": "1.0.0",
     "main": "index.js",
+    "author": {
+        "email": "davydesouzabar@gmail.com",
+        "name": "Davy de Souza Assunção"
+    },
     "scripts": {
         "start": "expo start --dev-client",
         "android": "expo run:android",
